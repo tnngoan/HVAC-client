@@ -2,6 +2,7 @@
 
 import { resend } from "@/lib/resend";
 import { contactFormSchema, type ContactFormData } from "@/lib/schemas";
+import { saveLeadToNotion } from "@/lib/notion";
 import ContactNotification from "@/emails/ContactNotification";
 import { business } from "@/data/business";
 
@@ -18,6 +19,9 @@ export async function submitContactForm(
   if (!parsed.success) {
     return { success: false, error: "Invalid form data. Please check your entries." };
   }
+
+  // Save to Notion in parallel (non-blocking — failure won't affect the user)
+  void saveLeadToNotion(parsed.data);
 
   try {
     await resend.emails.send({

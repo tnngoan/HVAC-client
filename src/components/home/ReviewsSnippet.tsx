@@ -1,18 +1,22 @@
 import Container from "@/components/ui/Container";
 import SectionHeading from "@/components/ui/SectionHeading";
+import { getTestimonials, type Testimonial } from "@/lib/notion";
 
-const featuredReviews = [
+const staticReviews: Testimonial[] = [
   {
+    id: "1",
     name: "Sarah M.",
     rating: 5,
     text: "Called at 10 PM when our AC died in July. A tech was here within 45 minutes and had it running by midnight. Incredible service!",
   },
   {
+    id: "2",
     name: "James R.",
     rating: 5,
     text: "Upfront pricing, no surprises. They replaced our entire HVAC system in one day and even cleaned up better than they found it.",
   },
   {
+    id: "3",
     name: "Linda K.",
     rating: 5,
     text: "Been using their maintenance plan for 3 years. Our system runs more efficiently and we have not had a single breakdown since.",
@@ -36,7 +40,10 @@ function Stars({ count }: { count: number }) {
   );
 }
 
-export default function ReviewsSnippet() {
+export default async function ReviewsSnippet() {
+  const notionReviews = await getTestimonials();
+  const reviews = notionReviews.length > 0 ? notionReviews : staticReviews;
+
   return (
     <section className="py-16 sm:py-24 bg-white">
       <Container>
@@ -51,9 +58,9 @@ export default function ReviewsSnippet() {
         <SectionHeading title="What Our Customers Say" />
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-          {featuredReviews.map((review) => (
+          {reviews.map((review) => (
             <div
-              key={review.name}
+              key={review.id}
               className="rounded-xl border border-gray-200 bg-white p-6"
             >
               <Stars count={review.rating} />
