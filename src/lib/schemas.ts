@@ -19,10 +19,10 @@ export const contactFormSchema = z.object({
       "air-quality",
       "other",
     ],
-    { required_error: "Please select a service" }
+    { message: "Please select a service" }
   ),
   propertyType: z.enum(["residential", "commercial"], {
-    required_error: "Please select property type",
+    message: "Please select property type",
   }),
   message: z
     .string()

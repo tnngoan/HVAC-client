@@ -10,16 +10,19 @@ export async function getTestimonials() {
   }
 
   try {
-    const response = await notion.databases.query({
-      database_id: process.env.NOTION_TESTIMONIALS_DB_ID,
-      filter: {
-        property: "Published",
-        checkbox: { equals: true },
+    const response = await notion.request({
+      method: "post",
+      path: `databases/${process.env.NOTION_TESTIMONIALS_DB_ID}/query`,
+      body: {
+        filter: {
+          property: "Published",
+          checkbox: { equals: true },
+        },
+        sorts: [{ property: "Date", direction: "descending" }],
       },
-      sorts: [{ property: "Date", direction: "descending" }],
     });
 
-    return response.results;
+    return (response as { results: unknown[] }).results;
   } catch {
     console.error("Failed to fetch testimonials from Notion");
     return [];
